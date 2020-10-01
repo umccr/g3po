@@ -95,7 +95,7 @@ def blank():
 @click.option('--uploader', help="Uploading user within system, e.g. user.name@g3po.org", required=True)
 @click.option('--authz', help="Authz resources split by comma, e.g. /programs/program1/projects/P1", required=True)
 @click.option('--filename', default=None, help="File name, e.g. test.bam")
-@click.option('--cred', default="credentials.json", help="Path to credentials.json i.e. API key from your profile")
+@click.option('--cred', default="credentials.json", help="Path to credentials.json downloaded from your profile")
 def blank_create(uploader, filename, authz, cred):
     indexer = _jwt_indexer(cred)
 
@@ -126,7 +126,7 @@ def blank_create(uploader, filename, authz, cred):
 @click.option('--authz', help="Authz resources split by comma, e.g. /programs/program1/projects/P1", required=True)
 @click.option('--urls', default=None,
               help="Resource URLs split by comma, e.g. s3://bucket/1543974f-93e7-4f67-85ac-802e19ec11e8/test.txt")
-@click.option('--cred', default="credentials.json", help="Path to credentials.json i.e. API key from your profile")
+@click.option('--cred', default="credentials.json", help="Path to credentials.json downloaded from your profile")
 def blank_update(guid, rev, hash_type, hash_value, size, urls, authz, cred):
     indexer = _jwt_indexer(cred)
 
@@ -155,15 +155,15 @@ def blank_update(guid, rev, hash_type, hash_value, size, urls, authz, cred):
 
 @index.command(name='delete')
 @click.argument('guid')
-@click.option('--cred', default="credentials.json", help="Path to credentials.json i.e. API key from your profile")
+@click.option('--cred', default="credentials.json", help="Path to credentials.json downloaded from your profile")
 def index_delete(guid, cred):
     indexer = _jwt_indexer(cred)
     indexer.delete_record(guid=guid)
 
 
 @index.command()
-@click.option('--cred', default="credentials.json", help="Path to credentials.json i.e. API key from your profile")
-@click.option('--tsv', default="manifest.tsv", help="Path to manifest.tsv file, refer README")
+@click.option('--cred', default="credentials.json", help="Path to credentials.json downloaded from your profile")
+@click.option('--tsv', default="manifest.tsv", help="Path to manifest.tsv file")
 @click.option('--thread', default=8, help="Number of thread, default 8")
 @click.option('--output', default=None, help="Output file")
 def manifest(cred, tsv, thread, output):

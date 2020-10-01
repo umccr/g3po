@@ -1,2 +1,2 @@
-guid	md5	size	file_name	authz	url
-	d0df0d078def0a5d7eb8ed6eb1e06099	7149868	somatic-PASS.vcf.gz	/programs/program1/projects/P1	s3://g3po-gen3-dev/bd59f90a-286d-4688-96a6-777a6f1df79d/somatic-PASS.vcf.gz
+guid	md5	size	file_name	authz	urls
+	d0df0d078def0a5d7eb8ed6eb1e06099	7149868	somatic-PASS.vcf.gz	/programs/program1/projects/P1	s3://g3po-gen3-dev/SBJV001/2020-10-01/somatic-PASS.vcf.gz

@@ -76,6 +76,23 @@ g3po index list
 
 ### Creating Blank Index
 
+- Help
+    ```
+    g3po index blank create --help
+    Usage: g3po index blank create [OPTIONS]
+    
+    Options:
+      --uploader TEXT  Uploading user within system, e.g. user.name@g3po.org
+                       [required]
+    
+      --authz TEXT     Authz resources split by comma, e.g.
+                       /programs/program1/projects/P1  [required]
+    
+      --filename TEXT  File name, e.g. test.bam
+      --cred TEXT      Path to credentials.json downloaded from your profile
+      --help           Show this message and exit.
+    ```
+
 - You can create a [blank index record](https://github.com/uc-cdis/indexd#blank-record-creation-in-indexd) as follows:
     ```
     g3po index blank create --uploader user.name@g3po.org --authz /programs/program1/projects/P1 | jq
@@ -93,6 +110,31 @@ g3po index list
     ```
 
 ### Updating Blank Index
+
+- Help
+    ```
+    g3po index blank update --help
+    Usage: g3po index blank update [OPTIONS]
+    
+    Options:
+      --guid TEXT        Blank GUID/DID to update e.g.
+                         1543974f-93e7-4f67-85ac-802e19ec11e8  [required]
+    
+      --rev TEXT         Current revision e.g. 7bd043f3  [required]
+      --hash_type TEXT   Hash type e.g. md5  [required]
+      --hash_value TEXT  Hash value e.g. ab167e49d25b488939b1ede42752458b
+                         [required]
+    
+      --size INTEGER     File size in bytes, e.g. 1024  [required]
+      --authz TEXT       Authz resources split by comma, e.g.
+                         /programs/program1/projects/P1  [required]
+    
+      --urls TEXT        Resource URLs split by comma, e.g.
+                         s3://bucket/1543974f-93e7-4f67-85ac-802e19ec11e8/test.txt
+    
+      --cred TEXT        Path to credentials.json downloaded from your profile
+      --help             Show this message and exit.
+    ```
 
 - You can update a blank index record with hashes, size, etc... as follows:
     ```
@@ -115,11 +157,21 @@ g3po index list
 
 ## Manifest Indexing
 
-> Linking Data from external Data Clouds to Gen3 Data Commons
-> https://gen3.org/resources/user/submit-data/sower/
+- Help
+    ```
+    g3po index manifest --help
+    Usage: g3po index manifest [OPTIONS]
+    
+    Options:
+      --cred TEXT       Path to credentials.json downloaded from your profile
+      --tsv TEXT        Path to manifest.tsv file
+      --thread INTEGER  Number of thread, default 8
+      --output TEXT     Output file
+      --help            Show this message and exit.
+    ```
 
-- Download `credentials.json` API key from your profile.
-- Download `manifest.tsv` [sample file](sample/manifest.tsv) and populate with data.
+- Download `credentials.json` API key from your profile. If `--cred` option is not specified, will look in current directory.
+- Download `manifest.tsv` [sample file](sample/manifest.tsv) and populate with data. If `--tsv` option is not specified, will look in current directory.
     ```
     tree .
     .
