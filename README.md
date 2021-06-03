@@ -2,13 +2,32 @@
 
 Assorted utility CLI to work with Gen3
 
-## Getting Started
 ```
 pip install g3po
 
 g3po --help
 g3po version
+```
 
+## Data Dictionary Subcommand
+
+You can convert/compile YAML schemas into a JSON as follows:
+
+```
+g3po dd convert local/yaml_schemas/ --out local/my_dd.json
+```
+
+e.g.
+```
+git clone https://github.com/umccr/umccr-dictionary.git
+cd umccr-dictionary
+g3po dd convert dictionary/umccr/ --out /tmp/umccr.json
+g3po dd convert dictionary/gdc/ --out /tmp/gdc.json
+g3po dd convert dictionary/anvil/ --out /tmp/anvil.json
+```
+
+## Index Subcommand
+```
 g3po index --help
 g3po index health
 g3po index stats

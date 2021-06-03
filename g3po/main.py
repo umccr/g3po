@@ -4,6 +4,7 @@ import os
 from datetime import datetime, timezone
 
 import click
+from dictionaryutils import dump_schemas_from_dir
 from gen3.auth import Gen3Auth
 from gen3.index import Gen3Index
 from gen3.tools.indexing import index_object_manifest
@@ -188,3 +189,19 @@ def manifest(cred, tsv, thread, output):
     )
 
     # logger.debug(json.dumps(files))
+
+
+@cli.group()
+def dd():
+    pass
+
+
+@dd.command()
+@click.argument('schema')
+@click.option('--out', default="schema.json", help="Output path")
+def convert(schema, out):
+    if os.path.isdir(out):
+        out = os.path.join(out, "schema.json")
+    click.echo(f"Writing schema into {out}...")
+    with open(out, "w") as f:
+        json.dump(dump_schemas_from_dir(schema), f)

@@ -8,3 +8,11 @@ testpypi: dist/g3po-$(version).tar.gz
 
 pypi: dist/g3po-$(version).tar.gz
 	@twine upload --sign dist/g3po-$(version)*
+
+image:
+	@docker build -t victorskl/g3po:latest .
+
+push:
+	@docker image tag victorskl/g3po:latest quay.io/victorskl/g3po:latest
+	@docker push victorskl/g3po:latest
+	@docker push quay.io/victorskl/g3po:latest
