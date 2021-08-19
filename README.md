@@ -9,6 +9,14 @@ g3po --help
 g3po version
 ```
 
+## Generate UUID
+
+```
+g3po uuid
+g3po uuid --help
+g3po uuid --count 10 | jq
+```
+
 ## Data Dictionary Subcommand
 
 You can convert/compile YAML schemas into a JSON as follows:
@@ -77,14 +85,10 @@ g3po index list
       --help       Show this message and exit.
     ```
 
-- All these sub-commands has optional `--cred` option. If this is not provided, it assumes to load `credentials.json` from current directory. 
+- All sub-commands has optional `--cred` option. If this is not provided, it assumes to load from `~/.gen3/credentials.json` directory.
 
 - Example, to delete by GUID/DID
     ```
-    tree .
-    .
-    └── credentials.json
-    
     g3po index delete bd59f90a-286d-4688-96a6-777a6f1df79d
     ```
 
@@ -189,12 +193,11 @@ g3po index list
       --help            Show this message and exit.
     ```
 
-- Download `credentials.json` API key from your profile. If `--cred` option is not specified, will look in current directory.
+- Download `credentials.json` API key from your profile. If `--cred` option is not specified, will look in `~/.gen3/credentials.json` directory.
 - Download `manifest.tsv` [sample file](sample/manifest.tsv) and populate with data. If `--tsv` option is not specified, will look in current directory.
     ```
     tree .
     .
-    ├── credentials.json
     └── manifest.tsv
     ```
 
@@ -204,8 +207,7 @@ g3po index list
   <summary>Click to expand!</summary>
 
 - `guid` - leave blank if you like Gen3 to generate GUID/DID.
-    - Otherwise, you can use program like [uuidgen](http://manpages.ubuntu.com/manpages/bionic/man1/uuidgen.1.html) or any compatible UUID generator to fill this field. 
-    - If you populate this `guid`, make sure these `guid` have not already existed in your Gen3 **_indexd_** database.
+    - Otherwise, generate UUID like so: `g3po uuid --count 10 | jq`
 - `md5` - use [`md5sum`](https://en.wikipedia.org/wiki/Md5sum) to produce hashes for your file resource
 - `size` - determine your file resource size in bytes. 
     - If your file is stored in S3 bucket then you can use `head-object` like so:
@@ -231,6 +233,17 @@ g3po index list
 - `urls` - Comma separated list of the file resource URLs
 </details>
 
+**Validate Manifest format:**
+```
+g3po index validate
+validating "manifest.tsv" manifest
+mapped manifest column "md5" to "MD5Validator" class instance
+mapped manifest column "urls" to "URLValidator" class instance
+mapped manifest column "size" to "SizeValidator" class instance
+mapped manifest column "authz" to "AuthzValidator" class instance
+finished validating "manifest.tsv" manifest, no errors were found
+manifest.tsv is valid!
+```
 
 **Run:**
 ```
@@ -238,7 +251,6 @@ g3po index manifest
 
 tree .
 .
-├── credentials.json
 ├── manifest.tsv
 └── manifest_output_1601392690.tsv
 
@@ -250,7 +262,6 @@ less manifest_output_1601392690.tsv
 - Activate virtual environment
 - And install pip dependencies 
 ```
-source venv/bin/activate
 pip install -e '.[dev,tests]'
 which g3po
 g3po version

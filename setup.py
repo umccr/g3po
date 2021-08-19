@@ -20,10 +20,10 @@ setup(
         "console_scripts": ["g3po=g3po.main:cli"],
     },
     install_requires=[
-        "click>=7.1.2",
+        "click>=8.0.1",
         "gen3>=4.2.0",
         "indexclient>=2.1",
-        "dictionaryutils>=3.4.1",
+        "dictionaryutils>=3.4.2",
     ],
     extras_require={
         "test": [

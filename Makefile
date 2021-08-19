@@ -1,4 +1,7 @@
 .PHONY: dist
+install:
+	@pip install -e '.[dev,tests]'
+
 dist:
 	@python setup.py sdist bdist_wheel
 
