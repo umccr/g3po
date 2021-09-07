@@ -1,3 +1,4 @@
+import csv
 import json
 import logging
 import os
@@ -172,11 +173,25 @@ def _verify_manifest_format(tsv):
     return indexing.is_valid_manifest_format(
         manifest_path=tsv,
         column_names_to_enums=None,
-        allowed_protocols=["s3", "gs"],
+        allowed_protocols=["s3", "gs", "https", "htsget", "gds", "file", "ftp", "gsiftp", "globus"],
         allow_base64_encoded_md5=False,
         error_on_empty_url=False,
         line_limit=None,
     )
+
+
+@index.command()
+def template():
+    manifest_file = "manifest.tsv"
+    if os.path.exists(manifest_file):
+        click.echo(f"Found existing '{manifest_file}'. Abort for accidental override. Please rename it!")
+        exit(0)
+
+    click.echo(f"Generating 'manifest.tsv' ...")
+    with open(manifest_file, "w") as tsv_file:
+        writer = csv.writer(tsv_file, delimiter='\t')
+        writer.writerow(["guid", "md5", "size", "file_name", "authz", "urls"])
+        writer.writerow([str(uuid_.uuid4()), "d0df0d078def0a5d7eb8ed6eb1e06099", "7149868", "somatic-PASS.vcf.gz", "/programs/program1/projects/P1", "s3://g3po/SBJV001/2020-10-01/somatic-PASS.vcf.gz"])
 
 
 @index.command()

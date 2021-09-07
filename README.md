@@ -201,39 +201,21 @@ g3po index list
     └── manifest.tsv
     ```
 
-**Manifest format:**
+**Generate Manifest Template:**
+```
+g3po index template
+```
 
-<details>
-  <summary>Click to expand!</summary>
-
+**Manifest Format:**
 - `guid` - leave blank if you like Gen3 to generate GUID/DID.
-    - Otherwise, generate UUID like so: `g3po uuid --count 10 | jq`
+    - Otherwise, generate UUID like so: `g3po uuid --count 10 | jq` or `uuid v4`
 - `md5` - use [`md5sum`](https://en.wikipedia.org/wiki/Md5sum) to produce hashes for your file resource
 - `size` - determine your file resource size in bytes. 
-    - If your file is stored in S3 bucket then you can use `head-object` like so:
-        ```
-        aws s3api head-object --bucket g3po-gen3-dev --key bd59f90a-286d-4688-96a6-777a6f1df79d/somatic-PASS.vcf.gz
-        {
-            "AcceptRanges": "bytes",
-            "LastModified": "2020-09-11T06:38:52+00:00",
-            "ContentLength": 7149868,
-            "ETag": "\"d0df0d078def0a5d7eb8ed6eb1e06099\"",
-            "ContentType": "binary/octet-stream",
-            "ServerSideEncryption": "AES256",
-            "Metadata": {}
-        }
-        ```
-    - Or, use `wc -c < file` like so:
-        ```
-        wc -c somatic-PASS.vcf.gz
-         7149868 somatic-PASS.vcf.gz
-        ```    
-- `authz` - Comma separated list of associated DD and resource authz ACL path that configured in Fence `user.yaml`.
+- `authz` - comma separated list of associated DD and resource authz ACL path that configured in Fence `user.yaml`.
 - `file_name` - File name
-- `urls` - Comma separated list of the file resource URLs
-</details>
+- `urls` - comma separated list of the file resource URLs
 
-**Validate Manifest format:**
+**Validate Manifest Format:**
 ```
 g3po index validate
 validating "manifest.tsv" manifest
