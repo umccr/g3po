@@ -239,6 +239,22 @@ tree .
 less manifest_output_1601392690.tsv
 ```
 
+## User YAML from LDAP
+
+Before executing, the environment variable G3PO_LDAP_PASSWORD must be set to the
+password of the readonly LDAP user (see the default CLI params to see what user is being
+used by default).
+
+```
+g3po user --user-in-yaml sample/user.in.yaml
+```
+
+This will transform the given `user.in.yaml` using information retrieved from the
+corresponding LDAP server.
+
+The transformed YAML will be output to stdout.
+
+
 ## Development
 
 - Activate virtual environment
