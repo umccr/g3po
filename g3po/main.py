@@ -12,6 +12,7 @@ from gen3.tools import indexing
 from indexclient import client
 
 from g3po import __version__, helper, GEN3_URL
+from g3po.ldap_to_gen3 import generate_user_yaml
 
 logger = logging.getLogger()
 handler = logging.StreamHandler(sys.stdout)
@@ -52,6 +53,30 @@ def uuid(count):
     for c in range(count):
         uuid_list.append(str(uuid_.uuid4()))
     click.echo(json.dumps(uuid_list))
+
+
+@cli.command()
+@click.option('--user-in-yaml', required=True,
+              help="The filename of a YAML template (with yglu annotations) that is the input to the user.yaml transform")
+@click.option('--ldap-server', default='ldaps://ldap-test.cilogon.org', help="The LDAP server")
+@click.option('--ldap-user', default='uid=readonly_user,ou=system,o=UMCCR,o=CO,dc=biocommons,dc=org,dc=au',
+              help="The user to bind for secure access to the LDAP server (uses passord from env variable G3PO_LDAP_PASSWORD)")
+@click.option('--ldap-search-base', default='ou=people,o=UMCCR,o=CO,dc=biocommons,dc=org,dc=au',
+              help="The search base for the LDAP search for users")
+def user(user_in_yaml, ldap_server, ldap_user, ldap_search_base):
+    pwd = os.getenv('G3PO_LDAP_PASSWORD')
+    if not pwd:
+        click.echo("The env variable G3PO_LDAP_PASSWORD must be set to the LDAP user password", err=True)
+        exit(1)
+
+    errs = generate_user_yaml(user_in_yaml, ldap_server, ldap_user, pwd, ldap_search_base)
+
+    # if yglu gives us any transform error messages then we print and abort
+    if errs:
+        for e in errs:
+            print(e)
+
+        exit(1)
 
 
 @cli.group()
