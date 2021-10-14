@@ -14,9 +14,7 @@ users:
   ? !for .gen3_users
   : !()
     ? !? $.voPersonExternalID.first()
-    : policies:
-        - help
-      tags:
+    : tags:
         name: !? $.cn.first()
         email: !? $.mail.first()
 
@@ -34,23 +32,34 @@ authz:
     - agha_metadata_readonly
 
   groups:
-    # a user group who can create programs and projects
-    - name: program_managers
-      policies:
-        - services.sheepdog-admin
-      users: !? $_.gen3_users.where($.isMemberOf.indexOf('CO:COU:UMCCR devops:members:active')>= 0).select($.voPersonExternalID.first())
 
-    - name: umccr
-      policies:
-        - umccr
-      users: !? .gen3_users.where($.isMemberOf.indexOf('CO:COU:UMCCR devops:members:active')>= 0).select($.voPersonExternalID.first())
-
-    # can create/update/delete indexd records
+    # technical admin group who can perform maintenance tasks on indexd records
     - name: indexd_admins
       policies:
         - indexd_admin
-      users: !? .gen3_users.where($.isMemberOf.indexOf('CO:COU:UMCCR devops:members:active')>= 0).select($.voPersonExternalID.first())
+      users: !? .gen3_users.where($.isMemberOf.indexOf('gen3:admins')>= 0).select($.voPersonExternalID.first())
 
+    # technical admin group (and/or data submission program manager) who can create programs and projects
+    - name: program_managers
+      policies:
+        - services.sheepdog-admin
+      users: !? $_.gen3_users.where($.isMemberOf.indexOf('gen3:program_managers')>= 0).select($.voPersonExternalID.first())
+
+    - name: sysops
+      policies:
+        - agha
+        - open_data_rw
+      users: !? .gen3_users.where($.isMemberOf.indexOf('gen3:sysops')>= 0).select($.voPersonExternalID.first())
+
+    - name: umccr
+      policies:
+        - data_upload
+        - workspace
+        - demo
+        - umccr
+        - zero
+        - biocommons
+      users: !? .gen3_users.where($.isMemberOf.indexOf('gen3:umccr')>= 0).select($.voPersonExternalID.first())
 
   resources:
     - name: workspace
@@ -66,16 +75,6 @@ authz:
     - name: open
     - name: programs
       subresources:
-        - name: MyFirstProgram
-          subresources:
-            - name: projects
-              subresources:
-                - name: MyFirstProject
-        - name: program1
-          subresources:
-            - name: projects
-              subresources:
-                - name: P1
         - name: demo
           subresources:
             - name: projects
@@ -144,22 +143,6 @@ authz:
         - storage_writer
       resource_paths:
         - /open
-    - id: all_programs_reader
-      role_ids:
-        - reader
-        - storage_reader
-      resource_paths:
-        - /programs
-    - id: MyFirstProject_submitter
-      role_ids:
-        - reader
-        - creator
-        - updater
-        - deleter
-        - storage_reader
-        - storage_writer
-      resource_paths:
-        - /programs/MyFirstProgram/projects/MyFirstProject
     - id: demo
       role_ids:
         - reader
@@ -184,17 +167,6 @@ authz:
         - storage_reader
       resource_paths:
         - /programs/demo/projects/public
-    - id: program1
-      role_ids:
-        - reader
-        - creator
-        - updater
-        - deleter
-        - storage_reader
-        - storage_writer
-      resource_paths:
-        - /programs/program1
-        - /programs/program1/projects/P1
     - id: umccr
       role_ids:
         - reader
@@ -335,5 +307,4 @@ authz:
 clients:
   wts:
     policies:
-      - all_programs_reader
       - open_data_reader

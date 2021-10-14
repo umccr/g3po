@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import click
 from dictionaryutils import dump_schemas_from_dir
 from gen3.tools import indexing
+from gen3users.main import validate as validate_user_yaml
 from indexclient import client
 
 from g3po import __version__, helper, GEN3_URL
@@ -55,7 +56,12 @@ def uuid(count):
     click.echo(json.dumps(uuid_list))
 
 
-@cli.command()
+@cli.group()
+def user():
+    pass
+
+
+@user.command(name='ldap')
 @click.option('--user-in-yaml', required=True,
               help="The filename of a YAML template (with yglu annotations) that is the input to the user.yaml transform")
 @click.option('--ldap-server', default='ldaps://ldap-test.cilogon.org', help="The LDAP server")
@@ -63,7 +69,7 @@ def uuid(count):
               help="The user to bind for secure access to the LDAP server (uses passord from env variable G3PO_LDAP_PASSWORD)")
 @click.option('--ldap-search-base', default='ou=people,o=UMCCR,o=CO,dc=biocommons,dc=org,dc=au',
               help="The search base for the LDAP search for users")
-def user(user_in_yaml, ldap_server, ldap_user, ldap_search_base):
+def user_ldap(user_in_yaml, ldap_server, ldap_user, ldap_search_base):
     pwd = os.getenv('G3PO_LDAP_PASSWORD')
     if not pwd:
         click.echo("The env variable G3PO_LDAP_PASSWORD must be set to the LDAP user password", err=True)
@@ -77,6 +83,13 @@ def user(user_in_yaml, ldap_server, ldap_user, ldap_search_base):
             print(e)
 
         exit(1)
+
+
+@user.command(name='validate')
+@click.argument('files', type=str, nargs=-1, required=True)
+@click.pass_context
+def user_validate(ctx, files):
+    ctx.forward(validate_user_yaml)
 
 
 @cli.group()

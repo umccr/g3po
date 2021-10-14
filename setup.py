@@ -24,6 +24,7 @@ setup(
         "gen3>=4.2.0",
         "indexclient>=2.1",
         "dictionaryutils>=3.4.2",
+        "gen3users>=0.7.0",
         "ldap3>=2.9.1",
         "yglu>=1.1.1",
         "importlib_metadata<2.0.0",

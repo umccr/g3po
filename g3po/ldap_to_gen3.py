@@ -1,5 +1,4 @@
 import os
-import os
 import tempfile
 from shutil import copyfile
 from typing import Optional, List

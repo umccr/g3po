@@ -4,6 +4,7 @@
 .coverage
 coverage.xml
 local/
+tmp/
 build/
 dist/
 .tox/

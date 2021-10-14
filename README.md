@@ -9,6 +9,58 @@ g3po --help
 g3po version
 ```
 
+## General
+
+### Environment Variable
+
+- You can override `GEN3_URL` environment variable to switch to different data commons
+    ```
+    GEN3_URL=https://caninedc.org/ g3po index list | jq
+    ```
+
+- Or, export `GEN3_URL` in your shell environment:
+    ```
+    export GEN3_URL=https://caninedc.org/
+    g3po index get 0614e421-0cd6-4f93-ad1d-5f9354928bd2 | jq
+    ```
+
+- And unset the `GEN3_URL` env var:
+    ```
+    unset GEN3_URL
+    ```
+
+### Credentials
+
+- Some sub-commands are required privilege access e.g.
+
+    ```
+    g3po index delete --help
+    Usage: g3po index delete [OPTIONS] GUID
+    
+    Options:
+      --cred TEXT  Path to credentials.json i.e. API key from your profile
+      --help       Show this message and exit.
+    ```
+
+- All sub-commands has optional `--cred` option. If this is not provided, it assumes to load from `~/.gen3/credentials.json` directory.
+
+- You can provide `--cred` path to `credentials.json` file
+    ```
+    g3po index delete --cred /path/credentials.json bd59f90a-286d-4688-96a6-777a6f1df79d
+    ```
+
+### Output Format
+
+- You can pipe `jq` with `g3po` output for pretty JSON format
+    ```
+    g3po index list | jq
+    ```
+
+- Get index by GUID/DID
+    ```
+    g3po index get 1543974f-93e7-4f67-85ac-802e19ec11e8 | jq
+    ```
+
 ## Generate UUID
 
 ```
@@ -41,61 +93,6 @@ g3po index health
 g3po index stats
 g3po index list
 ```
-
-### Output Format
-
-- You can pipe `jq` with `g3po` output for pretty JSON format
-    ```
-    g3po index list | jq
-    ```
-
-- Get index by GUID/DID
-    ```
-    g3po index get 1543974f-93e7-4f67-85ac-802e19ec11e8 | jq
-    ```
-
-### Env Var GEN3_URL
-
-- You can override `GEN3_URL` environment variable to switch to different data commons
-    ```
-    GEN3_URL=https://caninedc.org/ g3po index list | jq
-    ```
-
-- Or, export `GEN3_URL` in your shell environment:
-    ```
-    export GEN3_URL=https://caninedc.org/
-    g3po index get 0614e421-0cd6-4f93-ad1d-5f9354928bd2 | jq
-    ```
-
-- And unset the `GEN3_URL` env var:
-    ```
-    unset GEN3_URL
-    ```
-
-### Credentials
-
-- Some sub-commands are required privilege access and, proper authz configured for performing index operations. e.g.
-
-    ```
-    g3po index delete --help
-    Usage: g3po index delete [OPTIONS] GUID
-    
-    Options:
-      --cred TEXT  Path to credentials.json i.e. API key from your profile
-      --help       Show this message and exit.
-    ```
-
-- All sub-commands has optional `--cred` option. If this is not provided, it assumes to load from `~/.gen3/credentials.json` directory.
-
-- Example, to delete by GUID/DID
-    ```
-    g3po index delete bd59f90a-286d-4688-96a6-777a6f1df79d
-    ```
-
-- Or, provide path to `credentials.json` file
-    ```
-    g3po index delete --cred /path/credentials.json bd59f90a-286d-4688-96a6-777a6f1df79d
-    ```
 
 ### Creating Blank Index
 
@@ -193,17 +190,13 @@ g3po index list
       --help            Show this message and exit.
     ```
 
-- Download `credentials.json` API key from your profile. If `--cred` option is not specified, will look in `~/.gen3/credentials.json` directory.
-- Download `manifest.tsv` [sample file](sample/manifest.tsv) and populate with data. If `--tsv` option is not specified, will look in current directory.
-    ```
-    tree .
-    .
-    └── manifest.tsv
-    ```
-
-**Generate Manifest Template:**
+### Generate Manifest Template
 ```
 g3po index template
+
+tree .
+.
+└── manifest.tsv
 ```
 
 **Manifest Format:**
@@ -215,7 +208,7 @@ g3po index template
 - `file_name` - File name
 - `urls` - comma separated list of the file resource URLs
 
-**Validate Manifest Format:**
+### Validate Manifest Format
 ```
 g3po index validate
 validating "manifest.tsv" manifest
@@ -227,7 +220,7 @@ finished validating "manifest.tsv" manifest, no errors were found
 manifest.tsv is valid!
 ```
 
-**Run:**
+### Run Indexing
 ```
 g3po index manifest
 
@@ -239,24 +232,48 @@ tree .
 less manifest_output_1601392690.tsv
 ```
 
-## User YAML from LDAP
-
-Before executing, the environment variable G3PO_LDAP_PASSWORD must be set to the
-password of the readonly LDAP user (see the default CLI params to see what user is being
-used by default).
+## User Subcommand
 
 ```
-g3po user --user-in-yaml sample/user.in.yaml
+g3po user --help
+```
+
+### User YAML from LDAP
+
+Before executing, the environment variable `G3PO_LDAP_PASSWORD` must be set to the
+password of the LDAP user (see full options below).
+
+```
+g3po user ldap --user-in-yaml sample/user.in.yaml
 ```
 
 This will transform the given `user.in.yaml` using information retrieved from the
-corresponding LDAP server.
+corresponding LDAP server. The transformed YAML will be output to stdout.
 
-The transformed YAML will be output to stdout.
+Full options as follows:
+```
+export G3PO_LDAP_PASSWORD=<option_ldap-user_password_here>
 
+g3po user ldap \
+  --user-in-yaml sample/user.in.yaml \
+  --ldap-server "ldaps://ldap-test.cilogon.org" \
+  --ldap-user "uid=readonly_user,ou=system,o=UMCCR,o=CO,dc=biocommons,dc=org,dc=au" \
+  --ldap-search-base "ou=people,o=UMCCR,o=CO,dc=biocommons,dc=org,dc=au" > user.yaml
+```
+
+### Validate User YAML
+
+```
+g3po user validate --help
+g3po user validate user.yaml
+g3po user validate user1.yaml user2.yaml
+```
+
+NOTE: this is same-as or alias to `gen3user validate user.yaml`
 
 ## Development
 
+- Python 3.6
 - Activate virtual environment
 - And install pip dependencies 
 ```
