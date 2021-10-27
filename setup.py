@@ -26,9 +26,12 @@ setup(
         "dictionaryutils>=3.4.2",
         "gen3users>=0.7.0",
         "ldap3>=2.9.1",
-        "yglu>=1.1.1",
         "importlib_metadata<2.0.0",
-        "jsonschema==2.5.1"
+        "yglu>=1.1.1",
+        "jsonschema==2.5.1",
+        "setuptools",       # yglu bad setup! see https://github.com/lbovet/yglu/blob/master/setup.py
+        "setuptools_scm",   # yglu bad setup! see https://github.com/lbovet/yglu/blob/master/setup.py
+        "wheel",            # yglu bad setup! see https://github.com/lbovet/yglu/blob/master/setup.py
     ],
     extras_require={
         "test": [
@@ -40,5 +43,5 @@ setup(
             "wheel",
         ],
     },
-    python_requires=">=3.6",
+    python_requires=">=3.6,<=3.8",  # not me! see https://github.com/uc-cdis/dictionaryutils/blob/master/pyproject.toml
 )

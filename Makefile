@@ -21,3 +21,12 @@ push:
 	@docker push victorskl/g3po:latest
 	@docker push quay.io/victorskl/g3po:latest
 	@docker push quay.io/umccr/g3po:latest
+
+# Usage: make tag version=0.5.0
+tag:
+	@docker image tag victorskl/g3po:latest quay.io/umccr/g3po:$(version)
+	@docker image tag victorskl/g3po:latest quay.io/victorskl/g3po:$(version)
+	@docker image tag victorskl/g3po:latest victorskl/g3po:$(version)
+	@docker push quay.io/umccr/g3po:$(version)
+	@docker push quay.io/victorskl/g3po:$(version)
+	@docker push victorskl/g3po:$(version)

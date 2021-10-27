@@ -36,6 +36,7 @@ def check_healthy():
 
 
 @click.group()
+@click.version_option(__version__)
 def cli():
     pass
 

@@ -2,6 +2,8 @@
 
 Assorted utility CLI to work with Gen3
 
+> Required: **Python 3.6, 3.7**
+
 ```
 pip install g3po
 
@@ -273,7 +275,6 @@ NOTE: this is same-as or alias to `gen3user validate user.yaml`
 
 ## Development
 
-- Python 3.6
 - Activate virtual environment
 - And install pip dependencies 
 ```
